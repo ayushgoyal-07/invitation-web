@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lokesh & Geeta | The Silver Jubilee Gala</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --font-cinzel: 'Cinzel', serif;
+            --font-playfair: 'Playfair Display', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: #fffdf9;
+            color: #1e1b18;
+            overflow-x: hidden;
+        }
+
+        .font-cinzel { font-family: var(--font-cinzel); }
+        .font-playfair { font-family: var(--font-playfair); }
+
+        /* Metallic Gold Shimmer */
+        .gold-foil-text {
+            background: linear-gradient(135deg, #996515 0%, #d4af37 25%, #f7e7a9 50%, #b8860b 75%, #d4af37 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineGold 8s linear infinite;
+        }
+
+        @keyframes shineGold {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .luxury-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 40px 100px -20px rgba(180, 140, 60, 0.22),
+                        0 0 0 1px rgba(212, 175, 55, 0.35) inset;
+        }
+
+        /* 3D Envelope Animation */
+        .envelope-container {
+            perspective: 1200px;
+        }
+
+        .envelope-flap {
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 30;
+        }
+
+        .envelope-container.unfolded .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 5;
+        }
+
+        .envelope-letter {
+            transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s;
+        }
+
+        .envelope-container.unfolded .envelope-letter {
+            transform: translateY(-90px);
+        }
+
+        /* Wax Seal Button */
+        .wax-seal {
+            background: radial-gradient(circle at 35% 32%, #ef4444, #b91c1c 65%, #7f1d1d 100%);
+            box-shadow: 0 14px 35px rgba(185, 28, 28, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .wax-seal:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 20px 45px rgba(185, 28, 28, 0.6);
+        }
+
+        /* Floating Golden Sparkles */
+        @keyframes floatDust {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.35; }
+            50% { transform: translateY(-16px) rotate(8deg); opacity: 0.8; }
+        }
+
+        .gold-dust {
+            animation: floatDust 6s ease-in-out infinite;
+        }
+
+        /* Video Frame Glow */
+        .video-theatre-frame {
+            box-shadow: 0 0 50px -10px rgba(212, 175, 55, 0.35),
+                        0 25px 60px -15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="selection:bg-amber-200 selection:text-amber-950 relative min-h-screen flex flex-col justify-between">
+
+    <!-- FLOATING BACKGROUND MOTIFS -->
+    <div class="fixed top-0 left-0 w-80 h-80 rounded-full bg-gradient-to-br from-amber-200/30 to-amber-100/10 blur-[100px] pointer-events-none"></div>
+    <div class="fixed bottom-0 right-0 w-96 h-96 rounded-full bg-gradient-to-tl from-amber-300/25 to-orange-100/10 blur-[120px] pointer-events-none"></div>
+
+    <!-- BACKGROUND FLOATING ORNAMENTS -->
+    <div class="fixed top-12 left-8 text-amber-400 text-2xl gold-dust pointer-events-none">✧</div>
+    <div class="fixed top-1/3 right-12 text-amber-300 text-xl gold-dust pointer-events-none" style="animation-delay: -2s;">✦</div>
+    <div class="fixed bottom-24 left-16 text-amber-400 text-3xl gold-dust pointer-events-none" style="animation-delay: -4s;">✦</div>
+    <div class="fixed bottom-1/3 right-24 text-amber-300 text-lg gold-dust pointer-events-none" style="animation-delay: -1.5s;">✧</div>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="relative z-50 w-full max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full border border-amber-400/60 flex items-center justify-center font-cinzel text-xs font-bold text-amber-800 bg-amber-50">LG</span>
+            <span class="font-cinzel text-xs tracking-[0.25em] text-amber-900/80 font-bold uppercase">Silver Jubilee 2026</span>
+        </div>
+
+        <!-- AMBIENT AUDIO TOGGLE -->
+        <button id="musicToggleBtn" onclick="toggleAmbience()" class="px-4 py-2 rounded-full bg-white/90 border border-amber-300/60 shadow-sm text-amber-900 text-xs font-semibold tracking-wider flex items-center gap-2 hover:bg-amber-50 hover:shadow transition-all">
+            <span id="musicPulseDot" class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span id="musicStatusText">PLAY AMBIENCE</span>
+        </button>
+        <audio id="royalAmbienceAudio" loop preload="none">
+            <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-piano-112191.mp3" type="audio/mpeg">
+        </audio>
+    </header>
+
+    <!-- ================= STAGE 1: 3D ROYAL ENVELOPE COVER ================= -->
+    <main id="envelopeStage" class="relative z-30 w-full max-w-2xl mx-auto px-4 py-8 flex-1 flex flex-col items-center justify-center transition-all duration-700">
+        
+        <div id="envelopeWrapper" class="envelope-container relative w-full max-w-lg">
+            
+            <!-- ENVELOPE BACKDROP & SHADOW -->
+            <div class="relative w-full bg-[#fbf6ec] rounded-[2rem] border-2 border-amber-300/60 shadow-2xl overflow-hidden p-8 sm:p-12 text-center">
+                
+                <!-- Inner Gold Border Lining -->
+                <div class="absolute inset-3 rounded-[1.7rem] border border-amber-400/40 pointer-events-none"></div>
+                <div class="absolute top-5 left-5 text-amber-600/40 font-cinzel">✤</div>
+                <div class="absolute top-5 right-5 text-amber-600/40 font-cinzel">✤</div>
+                <div class="absolute bottom-5 left-5 text-amber-600/40 font-cinzel">✤</div>
+                <div class="absolute bottom-5 right-5 text-amber-600/40 font-cinzel">✤</div>
+
+                <!-- LETTER SLIDING PREVIEW -->
+                <div id="envelopeLetter" class="envelope-letter relative z-10">
+                    <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-amber-100/70 border border-amber-300/60 text-[11px] font-cinzel tracking-[0.25em] text-amber-900 font-bold uppercase mb-4">
+                        <span>✦</span> Silver Jubilee <span>✦</span>
+                    </div>
+
+                    <p class="font-playfair italic text-amber-900/60 text-lg sm:text-xl mb-1">A celebration 25 years in the making</p>
+
+                    <h1 class="font-cinzel text-3xl sm:text-5xl font-extrabold gold-foil-text tracking-wide my-3 leading-tight">
+                        Lokesh Goyal <br>
+                        <span class="text-xl sm:text-2xl font-playfair italic text-amber-800 lowercase block my-1">and</span>
+                        Geeta Goyal
+                    </h1>
+
+                    <div class="w-14 h-[1px] bg-amber-400/60 mx-auto my-4"></div>
+
+                    <p class="text-stone-600 text-xs sm:text-sm font-normal max-w-sm mx-auto leading-relaxed mb-8">
+                        Two and a half decades of love, devotion, and shared dreams. You are cordially invited to unlock our celebratory gala.
+                    </p>
+
+                    <!-- LIVE COUNTDOWN TIMER -->
+                    <div class="grid grid-cols-4 gap-2 max-w-xs mx-auto mb-8 bg-white/70 rounded-2xl p-3 border border-amber-200 shadow-sm text-center">
+                        <div>
+                            <span id="cdDays" class="block font-cinzel font-bold text-amber-900 text-lg">00</span>
+                            <span class="text-[9px] uppercase tracking-wider text-stone-500 font-medium">Days</span>
+                        </div>
+                        <div>
+                            <span id="cdHours" class="block font-cinzel font-bold text-amber-900 text-lg">00</span>
+                            <span class="text-[9px] uppercase tracking-wider text-stone-500 font-medium">Hours</span>
+                        </div>
+                        <div>
+                            <span id="cdMinutes" class="block font-cinzel font-bold text-amber-900 text-lg">00</span>
+                            <span class="text-[9px] uppercase tracking-wider text-stone-500 font-medium">Mins</span>
+                        </div>
+                        <div>
+                            <span id="cdSeconds" class="block font-cinzel font-bold text-amber-900 text-lg">00</span>
+                            <span class="text-[9px] uppercase tracking-wider text-stone-500 font-medium">Secs</span>
+                        </div>
+                    </div>
+
+                    <!-- 3D WAX SEAL UNVEIL ACTION -->
+                    <div class="flex flex-col items-center justify-center">
+                        <button onclick="breakWaxSealAndOpen()" class="wax-seal group w-24 h-24 sm:w-28 sm:h-28 rounded-full flex flex-col items-center justify-center text-white cursor-pointer relative">
+                            <span class="font-cinzel text-xl sm:text-2xl font-black tracking-widest uppercase">LG</span>
+                            <span class="text-[9px] tracking-wider uppercase font-bold text-amber-200 mt-0.5">OPEN INVITE</span>
+                        </button>
+                        <span class="text-[11px] tracking-[0.2em] uppercase font-bold text-amber-800/80 font-cinzel mt-4 animate-pulse">
+                            Tap Wax Seal To Unfold
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ================= STAGE 2: THE REVEALED INVITATION & VIDEO THEATRE ================= -->
+    <section id="fullInvitationStage" class="hidden opacity-0 relative z-40 w-full max-w-4xl mx-auto px-4 py-8 transition-opacity duration-1000 space-y-8">
+        
+        <!-- TOP STAGE CONTROLS -->
+        <div class="flex items-center justify-between border-b border-amber-200/60 pb-4">
+            <button onclick="returnToEnvelope()" class="px-5 py-2.5 rounded-full bg-white border border-amber-300 text-amber-950 font-semibold text-xs uppercase tracking-wider shadow-sm hover:bg-amber-50 flex items-center gap-2 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Close Invitation
+            </button>
+            <div class="font-cinzel text-xs font-bold uppercase tracking-[0.3em] text-amber-900">
+                25th Wedding Anniversary Gala
+            </div>
+        </div>
+
+        <!-- 1. CINEMATIC VIDEO THEATRE (FOR YOUR UPLOADED VIDEO) -->
+        <div class="luxury-card rounded-3xl p-5 sm:p-8 gold-foil-border video-theatre-frame relative overflow-hidden">
+            
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <span class="text-[10px] font-cinzel uppercase tracking-[0.25em] text-amber-700 font-bold block">Exclusive Feature</span>
+                    <h2 class="font-cinzel text-xl sm:text-2xl font-bold text-stone-900">The 25-Year Love Story Film</h2>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                    <span class="text-xs font-cinzel font-bold text-stone-600">PREMIERE</span>
+                </div>
+            </div>
+
+            <!-- Video Player -->
+            <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-inner border border-amber-400/40">
+                <!-- Replace src with your uploaded video path or URL -->
+                <video id="invitationVideoPlayer" class="w-full h-full object-cover" controls playsinline>
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+
+                <!-- Initial Video Overlay (Disappears when played) -->
+                <div id="videoCardOverlay" class="absolute inset-0 bg-stone-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center text-white">
+                    <div class="w-16 h-16 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 mb-3 shadow-lg">
+                        <svg class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <h3 class="font-cinzel text-xl font-bold gold-foil-text mb-1">Watch The Celebration Video</h3>
+                    <p class="text-xs sm:text-sm text-stone-300 max-w-sm mb-4 font-light">
+                        Add your video file into the <code class="bg-black/60 px-1 py-0.5 rounded text-amber-300">&lt;source src="..."&gt;</code> tag to show your video reel!
+                    </p>
+                    <button onclick="launchVideoPlayback()" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 text-stone-950 font-bold text-xs uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition-all">
+                        Play Video Reel
+                    </button>
+                </div>
+            </div>
+
+            <p class="font-playfair italic text-center text-stone-500 text-sm mt-4">
+                "Together is a wonderful place to be — celebrating 25 years of cherished moments."
+            </p>
+        </div>
+
+        <!-- 2. CEREMONY DETAILS & VENUE -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Date & Timeline Card -->
+            <div class="luxury-card rounded-3xl p-7 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-300/60 flex items-center justify-center text-amber-700 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                    <span class="text-xs font-cinzel font-bold uppercase tracking-widest text-amber-700">Date & Evening</span>
+                    <h3 class="font-cinzel text-2xl font-bold text-stone-900 mt-1 mb-2">29 November 2026</h3>
+                    <p class="text-stone-700 text-base font-semibold">Festivities commence at 7:00 PM</p>
+                    <p class="text-stone-500 text-xs sm:text-sm mt-2 leading-relaxed">
+                        An evening packed with royal dinner, live musical performances, anniversary toast, and family memories.
+                    </p>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-amber-200/50 flex items-center justify-between text-xs text-stone-600 font-medium">
+                    <span>Dress Code: Grand Festive / Formal</span>
+                    <span class="text-amber-700 font-bold">7:00 PM IST</span>
+                </div>
+            </div>
+
+            <!-- Venue & Navigation Card -->
+            <div class="luxury-card rounded-3xl p-7 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-300/60 flex items-center justify-center text-amber-700 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <span class="text-xs font-cinzel font-bold uppercase tracking-widest text-amber-700">The Destination</span>
+                    <h3 class="font-cinzel text-2xl font-bold text-stone-900 mt-1 mb-2">PRT Palace</h3>
+                    <p class="text-stone-700 text-sm font-semibold">Near Alhapur Underpass</p>
+                    <p class="text-stone-500 text-xs mt-1 leading-relaxed">
+                        Valet assistance and hospitality reception at the main palace driveway entrance.
+                    </p>
+                </div>
+
+                <a href="https://www.google.com/maps/search/?api=1&query=PRT+Palace+near+alhapur+underpass" target="_blank" class="mt-6 w-full py-3.5 rounded-2xl bg-stone-900 hover:bg-stone-800 text-amber-200 font-cinzel font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-95">
+                    <span>Open in Google Maps</span>
+                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- 3. INTERACTIVE WISHES / GUESTBOOK SECTION -->
+        <div class="luxury-card rounded-3xl p-6 sm:p-8">
+            <h3 class="font-cinzel text-xl font-bold text-stone-900 text-center mb-1">Send Your Blessings to Lokesh & Geeta</h3>
+            <p class="text-xs text-stone-500 text-center mb-6">Leave an instant congratulatory wish on their silver jubilee guest wall</p>
+            
+            <div class="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto mb-6">
+                <input id="guestNameInput" type="text" placeholder="Your Name" class="px-4 py-2.5 rounded-xl border border-amber-200 focus:outline-none focus:border-amber-400 bg-white/80 text-sm sm:w-1/3">
+                <input id="guestWishInput" type="text" placeholder="Write your warm wish..." class="px-4 py-2.5 rounded-xl border border-amber-200 focus:outline-none focus:border-amber-400 bg-white/80 text-sm flex-1">
+                <button onclick="postGuestWish()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-stone-950 font-bold text-xs uppercase tracking-wider shadow hover:brightness-105 active:scale-95 transition-all">
+                    Post Wish
+                </button>
+            </div>
+
+            <div id="wishesFeed" class="space-y-2 max-w-xl mx-auto max-h-44 overflow-y-auto pr-1">
+                <div class="bg-amber-50/70 border border-amber-200/50 rounded-xl p-3 text-xs">
+                    <span class="font-bold text-stone-800">Warm Greetings:</span>
+                    <p class="text-stone-600 mt-0.5">Wishing Uncle and Aunty the happiest 25th Silver Anniversary! Looking forward to an unforgettable night at PRT Palace! ✨</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. SIGN-OFF CREST -->
+        <div class="text-center py-4">
+            <div class="w-12 h-12 mx-auto rounded-full border border-amber-300 flex items-center justify-center font-cinzel text-sm font-bold text-amber-800 bg-amber-50 mb-2">LG</div>
+            <p class="font-cinzel text-sm font-bold text-stone-800 uppercase tracking-widest">With Best Compliments & Love</p>
+            <p class="font-playfair italic text-stone-600 text-lg">The Goyal Family & Friends</p>
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-6 text-stone-400 text-xs font-cinzel tracking-widest relative z-20">
+        25 Years of Eternal Togetherness • Lokesh & Geeta Goyal
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT -->
+    <script>
+        // 1. LIVE COUNTDOWN CALCULATION (Target: 29 Nov 2026, 19:00:00)
+        const targetEventDate = new Date("November 29, 2026 19:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetEventDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById("cdDays").innerText = String(days).padStart(2, '0');
+                document.getElementById("cdHours").innerText = String(hours).padStart(2, '0');
+                document.getElementById("cdMinutes").innerText = String(minutes).padStart(2, '0');
+                document.getElementById("cdSeconds").innerText = String(seconds).padStart(2, '0');
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // 2. LUXURY MULTI-COLOR CONFETTI CANNON
+        function shootGrandConfetti() {
+            const end = Date.now() + 1500;
+            const colors = ['#d4af37', '#ffd700', '#ffffff', '#ef4444', '#b91c1c'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors,
+                    zIndex: 9999
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors,
+                    zIndex: 9999
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // 3. BREAK WAX SEAL & UNFOLD INVITATION
+        function breakWaxSealAndOpen() {
+            shootGrandConfetti();
+
+            const envelope = document.getElementById("envelopeWrapper");
+            const envelopeStage = document.getElementById("envelopeStage");
+            const fullStage = document.getElementById("fullInvitationStage");
+
+            envelope.classList.add("unfolded");
+
+            setTimeout(() => {
+                envelopeStage.style.opacity = '0';
+                setTimeout(() => {
+                    envelopeStage.classList.add('hidden');
+                    fullStage.classList.remove('hidden');
+                    setTimeout(() => {
+                        fullStage.style.opacity = '1';
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 50);
+                }, 500);
+            }, 600);
+        }
+
+        // 4. RETURN TO ENVELOPE COVER
+        function returnToEnvelope() {
+            const envelope = document.getElementById("envelopeWrapper");
+            const envelopeStage = document.getElementById("envelopeStage");
+            const fullStage = document.getElementById("fullInvitationStage");
+
+            fullStage.style.opacity = '0';
+            setTimeout(() => {
+                fullStage.classList.add('hidden');
+                envelopeStage.classList.remove('hidden');
+                envelope.classList.remove("unfolded");
+                setTimeout(() => {
+                    envelopeStage.style.opacity = '1';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 50);
+            }, 500);
+        }
+
+        // 5. VIDEO PLAYBACK LAUNCHER
+        function launchVideoPlayback() {
+            const video = document.getElementById("invitationVideoPlayer");
+            const overlay = document.getElementById("videoCardOverlay");
+            overlay.style.display = 'none';
+            video.play();
+        }
+
+        // 6. AMBIENT AUDIO PLAYER
+        function toggleAmbience() {
+            const audio = document.getElementById("royalAmbienceAudio");
+            const text = document.getElementById("musicStatusText");
+            const pulse = document.getElementById("musicPulseDot");
+
+            if (audio.paused) {
+                audio.play().then(() => {
+                    text.innerText = "AMBIENCE ON";
+                    pulse.classList.add('animate-ping');
+                }).catch(() => {
+                    console.log("Audio requires user permission to start");
+                });
+            } else {
+                audio.pause();
+                text.innerText = "PLAY AMBIENCE";
+                pulse.classList.remove('animate-ping');
+            }
+        }
+
+        // 7. GUESTBOOK WISH POSTER
+        function postGuestWish() {
+            const nameInput = document.getElementById("guestNameInput");
+            const wishInput = document.getElementById("guestWishInput");
+            const feed = document.getElementById("wishesFeed");
+
+            if (!nameInput.value.trim() || !wishInput.value.trim()) return;
+
+            const wishEl = document.createElement("div");
+            wishEl.className = "bg-amber-50/70 border border-amber-200/50 rounded-xl p-3 text-xs animate-fadeIn";
+            wishEl.innerHTML = `<span class="font-bold text-stone-800">${escapeHtml(nameInput.value)}:</span>
+                                <p class="text-stone-600 mt-0.5">${escapeHtml(wishInput.value)}</p>`;
+
+            feed.prepend(wishEl);
+            nameInput.value = "";
+            wishInput.value = "";
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
+    </script>
+</body>
+</html>
